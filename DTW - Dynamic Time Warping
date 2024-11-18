@@ -19,11 +19,16 @@ def calculate_distance(sample, template):
             for k in range(p):
                 distance = ((S1[i] - T1[j]) ** 2) + distance
             distance = math.sqrt(distance)
+
             if i == 0 and j == 0:       # Map the beginning of sample and template
                 distance_matrix[0][0] = distance
-            if (i == 0 and j != 0):
+            elif (i == 0 and j != 0):
                 distance_matrix[i][j] = distance + distance_matrix[i][j-1]
-            if (i != 0 and j == 0):
+            elif (i != 0 and j == 0):
                 distance_matrix[i][j] = distance + distance_matrix[i-1][j]
+            else:
+                min_neighbor = min(distance_matrix[i][j-1], distance_matrix[i-1][j], distance_matrix[i-1][j-1])
+                distance_matrix[i][j] = distance + min_neighbor
+            
 calculate_distance(S1, T1)
 print(distance_matrix)
