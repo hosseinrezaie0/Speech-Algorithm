@@ -9,8 +9,6 @@ p = S1.shape[0]    # Number of features
 n = S1.shape[1]    # Length of sample
 NumberOfTemplate = 2 # Number of templates
 
-# distance_matrix = np.zeros((n, m))
-
 def Calculate_Distance(sample, template, m):
     distance_matrix = np.zeros((n, m))
     for i in range(n):
@@ -31,12 +29,6 @@ def Calculate_Distance(sample, template, m):
                 distance_matrix[i][j] = distance + min_neighbor
     return distance_matrix
             
-# distance1 = calculate_distance(S1, T1, T1.shape[1])
-# distance2 = calculate_distance(S1, T2, T2.shape[1])
-# print(distance1)
-# print(distance2)
-# similarity = distance1[n-1][T1.shape[1]-1]
-# print(similarity)
 
 template_list = ["T1", "T2"]
 def Find_Best_Match(sample, nt):
@@ -49,8 +41,11 @@ def Find_Best_Match(sample, nt):
         if distance[n-1][globals()[template_list[i]].shape[1]-1] < next(iter(best_match.values())):
             best_match = {template_list[i] : distance[n-1][globals()[template_list[i]].shape[1] -1]}
     return best_match
-print(Find_Best_Match(S1, NumberOfTemplate))
 
+answer = Find_Best_Match(S1, NumberOfTemplate)
+matched_template, distance = next(iter(answer.items()))
+
+print(f"The most similar template is: {matched_template} with a distance of {distance}")
 
 
 
