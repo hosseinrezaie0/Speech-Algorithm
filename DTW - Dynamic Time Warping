@@ -1,1 +1,29 @@
+import numpy as np
+import math 
 
+p = 1    # Number of features
+n = 6    # Length of sample
+m = 8   # Length of template
+
+nt = 1 # Number of templates
+
+S1 = np.array([2, 3, 3, 4, 2, 4])
+T1 = np.array([2.5,2,3.5,4,4,3,2,4])
+
+distance_matrix = np.zeros((n, m))
+
+def calculate_distance(sample, template):
+    for i in range(n):
+        for j in range(m):
+            distance = 0
+            for k in range(p):
+                distance = ((S1[i] - T1[j]) ** 2) + distance
+            distance = math.sqrt(distance)
+            if i == 0 and j == 0:       # Map the beginning of sample and template
+                distance_matrix[0][0] = distance
+            if (i == 0 and j != 0):
+                distance_matrix[i][j] = distance + distance_matrix[i][j-1]
+            if (i != 0 and j == 0):
+                distance_matrix[i][j] = distance + distance_matrix[i-1][j]
+calculate_distance(S1, T1)
+print(distance_matrix)
