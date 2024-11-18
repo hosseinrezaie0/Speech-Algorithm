@@ -3,21 +3,21 @@ import math
 
 S1 = np.array([[12, 11, 15, 15],[50, 51, 50, 52]])
 T1 = np.array([[12, 13, 13, 14, 17],[53, 50, 52, 48, 49]])
+T2 = np.array([[14, 10, 18],[32, 51, 52]])
 
-p = 2    # Number of features
+p = S1.shape[0]    # Number of features
 n = S1.shape[1]    # Length of sample
-m = T1.shape[1]   # Length of template
+NumberOfTemplate = 2 # Number of templates
 
-nt = 1 # Number of templates
+# distance_matrix = np.zeros((n, m))
 
-distance_matrix = np.zeros((n, m))
-
-def calculate_distance(sample, template):
+def Calculate_Distance(sample, template, m):
+    distance_matrix = np.zeros((n, m))
     for i in range(n):
         for j in range(m):
             distance = 0
             for k in range(p):
-                distance = ((S1[k][i] - T1[k][j]) ** 2) + distance
+                distance = ((sample[k][i] - template[k][j]) ** 2) + distance
             distance = math.sqrt(distance)
 
             if i == 0 and j == 0:       # Map the beginning of sample and template
@@ -29,7 +29,28 @@ def calculate_distance(sample, template):
             else:
                 min_neighbor = min(distance_matrix[i][j-1], distance_matrix[i-1][j], distance_matrix[i-1][j-1])
                 distance_matrix[i][j] = distance + min_neighbor
+    return distance_matrix
             
-calculate_distance(S1, T1)
-print(distance_matrix)
+# distance1 = calculate_distance(S1, T1, T1.shape[1])
+# distance2 = calculate_distance(S1, T2, T2.shape[1])
+# print(distance1)
+# print(distance2)
+# similarity = distance1[n-1][T1.shape[1]-1]
+# print(similarity)
+
+template_list = ["T1", "T2"]
+def Find_Best_Match(sample, nt):
+    distances = {}
+    best_match = {"No match":float("inf")}
+
+    for i in range(nt):
+        distance = Calculate_Distance(sample, globals()[template_list[i]], globals()[template_list[i]].shape[1])
+        distances[template_list[i]] = distance
+        if distance[n-1][globals()[template_list[i]].shape[1]-1] < next(iter(best_match.values())):
+            best_match = {template_list[i] : distance[n-1][globals()[template_list[i]].shape[1] -1]}
+    return best_match
+print(Find_Best_Match(S1, NumberOfTemplate))
+
+
+
 
